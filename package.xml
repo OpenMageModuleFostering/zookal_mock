@@ -1,26 +1,34 @@
 <?xml version="1.0"?>
 <package>
     <name>Zookal_Mock</name>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <stability>stable</stability>
     <license uri="https://github.com/Zookal/magento-mock">OSL</license>
     <channel>community</channel>
     <extends/>
     <summary>Transparent auto detecting of disabled core modules &amp; exten. Providing mock objects for not breaking Magento.</summary>
-    <description>&lt;h1&gt;&#xD;
-    Mock Objects&lt;/h1&gt;&#xD;
+    <description>&lt;p&gt;&lt;strong&gt;&#xD;
+Transparent autodetecting of disabled core modules and extensions and providing mock objects for not&#xD;
+    breaking Magento.&#xD;
+    &lt;ul&gt;&#xD;
+    &lt;li&gt;Nothing to configure. *&lt;/li&gt;&#xD;
+        &lt;li&gt;No class rewrites.&lt;/li&gt;&#xD;
+        &lt;li&gt;Only one observer. &lt;/li&gt;&#xD;
+        &lt;li&gt;Works out of the box.&lt;/li&gt;&#xD;
+    &lt;/ul&gt;&#xD;
+&lt;/strong&gt;&#xD;
 &#xD;
-&lt;h5&gt;&#xD;
-    TL;DR: Transparent autodetecting of disabled core modules and extensions and providing mock objects for not&#xD;
-    breaking Magento. Nothing to configure. No class rewrites. Only one observer. Works out of the box.&lt;/h5&gt;&#xD;
+    * only if you disable modules which have dependencies to other disabled modules. See documentation.&#xD;
+&#xD;
+&lt;/p&gt;&#xD;
 &#xD;
 &lt;p&gt;If you try to disable e.g. Mage_Newsletter or Mage_Wishlist or ... and you call certain parts of the backend or some rare parts of the frontend you will get&#xD;
     errors that Magento cannot find the class XYZ. Best examples are the two previoulsy mentioned. If you have disabled them and you open in the backend a&#xD;
     customer entry to edit it, the page will generate an error. Mage_Customer Edit has many dependencies with other modules. So the &lt;strong&gt;Zookal Mock&#xD;
         Module&lt;/strong&gt; will provide you mock objects which catches all method calls to disabled classes of that modules without breaking anything.&lt;/p&gt;&#xD;
 &#xD;
-&lt;p&gt;&lt;strong&gt;Uninstalling payment modules&lt;/strong&gt;: If you try to remove a payment module (&lt;em&gt;which has already been used by customers in the checkout&lt;/em&gt;) you&#xD;
-    cannot open anymore all orders associated with that module. The reason is that the tables &lt;code&gt;sales_flat_*_payment&lt;/code&gt; contains in the column &lt;code&gt;method&lt;/code&gt;&#xD;
+&lt;p&gt;&lt;strong&gt;Uninstalling payment modules&lt;/strong&gt;: If you try to remove a payment module (which has already been used by customers in the checkout) you&#xD;
+    cannot open anymore all orders associated with that module. The reason is that the tables sales_flat_*_payment contains in the column method&#xD;
     the method which referers to the model for loading payment relevant informations. Please see below how to uninstall your payment module without touching&#xD;
     database tables.&lt;/p&gt;&#xD;
 &#xD;
@@ -35,6 +43,7 @@
     &lt;li&gt;Mage_Rating&lt;/li&gt;&#xD;
     &lt;li&gt;Mage_Tag&lt;/li&gt;&#xD;
     &lt;li&gt;Mage_Tax&lt;/li&gt;&#xD;
+    &lt;li&gt;Mage_Shipping&lt;/li&gt;&#xD;
     &lt;li&gt;Mage_Log&lt;/li&gt;&#xD;
     &lt;li&gt;Mage_Backup&lt;/li&gt;&#xD;
     &lt;li&gt;Mage_Customer&lt;/li&gt;&#xD;
@@ -51,25 +60,21 @@
 &lt;p&gt;Also we can't delete the database tables from some disabled modules as e.g. CatalogIndex relies von customer_group tables&#xD;
     or Customer relies on some tax tables when tax is disabled.&lt;/p&gt;&#xD;
 &#xD;
-&lt;p&gt;At Zookal we have the following modules disabled: Mage_AdminNotification, Mage_Authorizenet, Mage_Backup, Mage_Captcha, Mage_Compiler, Mage_Connect,&#xD;
-    Mage_GoogleCheckout, Mage_GoogleBase, Mage_Install, Mage_Log, Mage_Paypal, Mage_PaypalUk, Mage_Poll, Mage_ProductAlert, Mage_Review, Mage_Rating,&#xD;
-    Mage_Rss, Mage_Sendfriend, Mage_Tag, Mage_Usa, Mage_Wishlist, Mage_XmlConnect, Phoenix_Moneybookers.&lt;/p&gt;&#xD;
-&#xD;
 &lt;h2&gt;&#xD;
     How do I&#xD;
     disable a module?&lt;/h2&gt;&#xD;
 &#xD;
 &lt;p&gt;Add in your custom app/etc/modules/Vendor_NameSpace.xml&lt;/p&gt;&#xD;
 &#xD;
-&lt;div class="highlight highlight-xml"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;config&amp;gt;&lt;/span&gt;&#xD;
-    &lt;span class="nt"&gt;&amp;lt;modules&amp;gt;&lt;/span&gt;&#xD;
-        &lt;span class="nt"&gt;&amp;lt;Mage_ModuleName&amp;gt;&lt;/span&gt;&#xD;
-            &lt;span class="nt"&gt;&amp;lt;active&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/active&amp;gt;&lt;/span&gt;&#xD;
-        &lt;span class="nt"&gt;&amp;lt;/Mage_ModuleName&amp;gt;&lt;/span&gt;&#xD;
-    &lt;span class="nt"&gt;&amp;lt;/modules&amp;gt;&lt;/span&gt;&#xD;
-&lt;span class="nt"&gt;&amp;lt;/config&amp;gt;&lt;/span&gt;&#xD;
+&lt;pre&gt;&#xD;
+    &amp;lt;config&amp;gt;&#xD;
+        &amp;lt;modules&amp;gt;&#xD;
+            &amp;lt;Mage_ModuleName&amp;gt;&#xD;
+                &amp;lt;active&amp;gt;false&amp;lt;/active&amp;gt;&#xD;
+            &amp;lt;/Mage_ModuleName&amp;gt;&#xD;
+        &amp;lt;/modules&amp;gt;&#xD;
+    &amp;lt;/config&amp;gt;&#xD;
 &lt;/pre&gt;&#xD;
-&lt;/div&gt;&#xD;
 &#xD;
 &lt;h2&gt;&#xD;
     How do I uninstall a payment module?&lt;/h2&gt;&#xD;
@@ -80,42 +85,43 @@
 &#xD;
 &lt;p&gt;In one of your local modules add the following "backup" entry into the config.xml:&lt;/p&gt;&#xD;
 &#xD;
-&lt;div class="highlight highlight-xml"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;config&amp;gt;&lt;/span&gt;&#xD;
-    &lt;span class="nt"&gt;&amp;lt;default&amp;gt;&lt;/span&gt;&#xD;
-        &lt;span class="nt"&gt;&amp;lt;payment&amp;gt;&lt;/span&gt;&#xD;
-            &lt;span class="nt"&gt;&amp;lt;paypal_standard&amp;gt;&lt;/span&gt;&#xD;
-                &lt;span class="nt"&gt;&amp;lt;model&amp;gt;&lt;/span&gt;zookal_mock/mocks_mage_payment&lt;span class="nt"&gt;&amp;lt;/model&amp;gt;&lt;/span&gt;&#xD;
-            &lt;span class="nt"&gt;&amp;lt;/paypal_standard&amp;gt;&lt;/span&gt;&#xD;
-            &lt;span class="nt"&gt;&amp;lt;another_payment_method&amp;gt;&lt;/span&gt;&#xD;
-                &lt;span class="nt"&gt;&amp;lt;model&amp;gt;&lt;/span&gt;zookal_mock/mocks_mage_payment&lt;span class="nt"&gt;&amp;lt;/model&amp;gt;&lt;/span&gt;&#xD;
-            &lt;span class="nt"&gt;&amp;lt;/another_payment_method&amp;gt;&lt;/span&gt;&#xD;
-        &lt;span class="nt"&gt;&amp;lt;/payment&amp;gt;&lt;/span&gt;&#xD;
-    &lt;span class="nt"&gt;&amp;lt;/default&amp;gt;&lt;/span&gt;&#xD;
-&lt;span class="nt"&gt;&amp;lt;/config&amp;gt;&lt;/span&gt;&#xD;
+&#xD;
+&lt;pre&gt;&#xD;
+    &amp;lt;config&amp;gt;&#xD;
+        &amp;lt;default&amp;gt;&#xD;
+            &amp;lt;payment&amp;gt;&#xD;
+                &amp;lt;paypal_standard&amp;gt;&#xD;
+                    &amp;lt;model&amp;gt;zookal_mock/mocks_mage_payment&amp;lt;/model&amp;gt;&#xD;
+                &amp;lt;/paypal_standard&amp;gt;&#xD;
+                &amp;lt;another_payment_method&amp;gt;&#xD;
+                    &amp;lt;model&amp;gt;zookal_mock/mocks_mage_payment&amp;lt;/model&amp;gt;&#xD;
+                &amp;lt;/another_payment_method&amp;gt;&#xD;
+            &amp;lt;/payment&amp;gt;&#xD;
+        &amp;lt;/default&amp;gt;&#xD;
+    &amp;lt;/config&amp;gt;&#xD;
 &lt;/pre&gt;&#xD;
-&lt;/div&gt;&#xD;
 &#xD;
 &lt;p&gt;The above xml contains the section where Mage_Paypal module has been disabled and previously used in orders.&lt;/p&gt;&#xD;
 &#xD;
 &lt;p&gt;No other database updates are required. Clear the caches and check in the backend some orders related to that payment method. You will now see a key/value&#xD;
     list of the payment details.&lt;/p&gt;&#xD;
 &#xD;
-&lt;p&gt;The backend mock payment block has an integrated event &lt;code&gt;mock_payment_backend_block_to_html_before&lt;/code&gt; with which you can modify the output.&lt;/p&gt;&#xD;
+&lt;p&gt;The backend mock payment block has an integrated event mock_payment_backend_block_to_html_before with which you can modify the output.&lt;/p&gt;&#xD;
 &#xD;
-&lt;p&gt;The frontend mock payment block uses the default block &lt;code&gt;Mage_Core_Block_Abstract&lt;/code&gt; which allows you the usual modifications.&lt;/p&gt;&#xD;
+&lt;p&gt;The frontend mock payment block uses the default block Mage_Core_Block_Abstract which allows you the usual modifications.&lt;/p&gt;&#xD;
 &#xD;
 &lt;h2&gt;&#xD;
     I've disabled and removed Mage_Adminhtml&lt;/h2&gt;&#xD;
 &#xD;
 &lt;p&gt;You rock!&lt;/p&gt;&#xD;
 &#xD;
-&lt;p&gt;Did you remove every Adminhtml area via &lt;code&gt;$ find . -iname "adminhtml" -type d -exec rm -Rf {} +&lt;/code&gt; ?&lt;/p&gt;&#xD;
+&lt;p&gt;Did you remove every Adminhtml area via $ find . -iname "adminhtml" -type d -exec rm -Rf {} + ?&lt;/p&gt;&#xD;
 &#xD;
 &lt;p&gt;Running a backend-less version of Magento saves you processor time, space, speeds up your store and improves security. All missing required adminhtml files&#xD;
     will be transparently mocked. Nothing to configure!&lt;/p&gt;&#xD;
 &#xD;
-&lt;h4&gt;&#xD;
-    But how do I maintain a backend-less store?&lt;/h4&gt;&#xD;
+&#xD;
+    But how do I maintain a backend-less store?&#xD;
 &#xD;
 &lt;p&gt;You have two solutions:&lt;/p&gt;&#xD;
 &#xD;
@@ -128,7 +134,7 @@
 &lt;p&gt;(1) If having multiple servers: Make sure that you connect only via SSL encryption to your MySQL server. Someone is spying :-(``&lt;/p&gt;&#xD;
 &#xD;
 &lt;p&gt;(2) There is currently a feature missing in n98-magerun &lt;a href="https://github.com/netz98/n98-magerun/issues/309"&gt;https://github.com/netz98/n98-magerun/issues/309&lt;/a&gt;&#xD;
-    that you cannot configure &lt;code&gt;Mage:run()&lt;/code&gt; to use a custom configuration model as explained below.&lt;/p&gt;&#xD;
+    that you cannot configure Mage:run() to use a custom configuration model as explained below.&lt;/p&gt;&#xD;
 &#xD;
 &lt;h2&gt;&#xD;
     I've disabled module&#xD;
@@ -136,33 +142,33 @@
 &#xD;
 &lt;p&gt;Let's say you disabled Mage_Dataflow but enabled Mage_Catalog and the system is presenting you:&lt;/p&gt;&#xD;
 &#xD;
-&lt;pre&gt;&lt;code&gt;"Mage_Catalog" requires module "Mage_Dataflow"&#xD;
-&lt;/code&gt;&lt;/pre&gt;&#xD;
+&lt;pre&gt;&#xD;
+    "Mage_Catalog" requires module "Mage_Dataflow"&#xD;
+&lt;/pre&gt;&#xD;
+&#xD;
 &#xD;
 &lt;p&gt;You have two possibilities:&lt;/p&gt;&#xD;
 &#xD;
 &lt;ol&gt;&#xD;
     &lt;li&gt;Edit app/etc/modules/Mage_*.xml and remove the appropriate dependencies.&lt;/li&gt;&#xD;
-    &lt;li&gt;Edit your main index.php file and add this custom config model to &lt;code&gt;Mage::run()&lt;/code&gt;&#xD;
+    &lt;li&gt;Edit your main index.php file and add this custom config model to Mage::run()&#xD;
     &lt;/li&gt;&#xD;
 &lt;/ol&gt;&#xD;
-&lt;div class="highlight highlight-php"&gt;&lt;pre&gt;&lt;span class="nx"&gt;Mage&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="na"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span&#xD;
-        class="nv"&gt;$mageRunCode&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nv"&gt;$mageRunType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;array&lt;/span&gt;&lt;span&#xD;
-        class="p"&gt;(&lt;/span&gt;&#xD;
-    &lt;span class="s1"&gt;'config_model'&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s1"&gt;'Zookal_Mock_Model_Config'&lt;/span&gt;&#xD;
-&lt;span class="p"&gt;));&lt;/span&gt;&#xD;
+&lt;pre&gt;&#xD;
+    Mage::run($mageRunCode, $mageRunType, array(&#xD;
+        'config_model' =&gt; 'Zookal_Mock_Model_Config'&#xD;
+    ));&#xD;
 &lt;/pre&gt;&#xD;
-&lt;/div&gt;&#xD;
 &#xD;
-&lt;p&gt;The config model &lt;code&gt;Zookal_Mock_Model_Config&lt;/code&gt; will automatically resolve invalid dependencies for disabled modules. But some dependency really make&#xD;
+&lt;p&gt;The config model Zookal_Mock_Model_Config will automatically resolve invalid dependencies for disabled modules. But some dependency really make&#xD;
     sense ;-)&lt;/p&gt;&#xD;
 &#xD;
 &lt;h2&gt;I've disabled&#xD;
     Mage_[Bundle|Rating|Review|Wishlist|Usa] but getting a weird error!&lt;/h2&gt;&#xD;
 &#xD;
-&lt;p&gt;The error is: &lt;code&gt;Notice: Trying to get property of non-object in app/code/core/Mage/Core/Model/Config.php on line 1239&lt;/code&gt;.&lt;/p&gt;&#xD;
+&lt;p&gt;The error is: &lt;pre&gt;Notice: Trying to get property of non-object in app/code/core/Mage/Core/Model/Config.php on line 1239.&lt;/pre&gt;&lt;/p&gt;&#xD;
 &#xD;
-&lt;p&gt;Digging deeper Mage_Core_Model_Config would like to access &lt;code&gt;Mage::helper('core')-&amp;gt;__()&lt;/code&gt; to display you the error message that&#xD;
+&lt;p&gt;Digging deeper Mage_Core_Model_Config would like to access Mage::helper('core')-&gt;__() to display you the error message that&#xD;
     Mage_[Bundle|Rating|Review|Wishlist|Usa] requires the module Mage_XmlConnect. The notice message appears because the core helper is not yet initialized.&lt;/p&gt;&#xD;
 &#xD;
 &lt;p&gt;So deactivating Mage_XmlConnect works out as the solution. It has many dependencies. Btw: Only if you have the Magento own mobile app you'll need the&#xD;
@@ -177,9 +183,31 @@
 &#xD;
 &lt;ol&gt;&#xD;
     &lt;li&gt;Customize your theme in that way that no one can access (/).&lt;/li&gt;&#xD;
-    &lt;li&gt;Create your own front router by adding an observer to the event &lt;code&gt;controller_front_init_routers&lt;/code&gt;.&lt;/li&gt;&#xD;
+    &lt;li&gt;Create your own front router by adding an observer to the event controller_front_init_routers.&lt;/li&gt;&#xD;
 &lt;/ol&gt;&#xD;
 &lt;p&gt;Blocks are also gone.&lt;/p&gt;&#xD;
+&#xD;
+&#xD;
+&lt;h2&gt;I've disabled Mage_Shipping but the checkout still won't work&lt;/h2&gt;&#xD;
+&#xD;
+&lt;p&gt;You need to trick the Sales and the Checkout module. You have to place a rewrite of &lt;code&gt;Mage_Catalog_Model_Product&lt;/code&gt; somewhere in your&#xD;
+codebase or disable the comment in the mocks modules config.xml file.&lt;/p&gt;&#xD;
+&#xD;
+&lt;p&gt;Add the following method to your &lt;code&gt;Mage_Catalog_Model_Product&lt;/code&gt; rewrite:&lt;/p&gt;&#xD;
+&#xD;
+&lt;pre&gt;&lt;code&gt;    /**&#xD;
+     * @return bool&#xD;
+     */&#xD;
+    public function getIsVirtual()&#xD;
+    {&#xD;
+        return true;&#xD;
+    }&#xD;
+&lt;/code&gt;&lt;/pre&gt;&#xD;
+&#xD;
+&lt;p&gt;Alternatively you can use the class &lt;code&gt;Zookal_Mock_Model_Catalog_Model_Product&lt;/code&gt; provided by this module.&lt;/p&gt;&#xD;
+&#xD;
+&lt;p&gt;Do &lt;em&gt;not&lt;/em&gt; change anything in the database as there are several columns and attributes whose name is &lt;code&gt;is_virtual&lt;/code&gt; or &lt;code&gt;virtual&lt;/code&gt;.&lt;/p&gt;&#xD;
+&#xD;
 &#xD;
 &lt;h2&gt;&#xD;
     Can I remove the files of the disabled modules?&lt;/h2&gt;&#xD;
@@ -191,6 +219,7 @@
     &lt;li&gt;Mage_Adminhtml&lt;/li&gt;&#xD;
     &lt;li&gt;Mage_Log&lt;/li&gt;&#xD;
     &lt;li&gt;Mage_Tag&lt;/li&gt;&#xD;
+    &lt;li&gt;Mage_shipping&lt;/li&gt;&#xD;
 &lt;/ul&gt;&#xD;
 &lt;p&gt;which have hardcoded dependencies through the whole Mage_Adminhtml code (if adminhtml has not been removed).&lt;/p&gt;&#xD;
 &#xD;
@@ -200,7 +229,7 @@
     Will there be a performance increase?&lt;/h2&gt;&#xD;
 &#xD;
 &lt;p&gt;Yes there will be a performance increase due to less loading of classes and xml files.&lt;/p&gt;&#xD;
- &#xD;
+&#xD;
 &#xD;
 &lt;h2&gt;&#xD;
     About&lt;/h2&gt;&#xD;
@@ -227,24 +256,16 @@
 &#xD;
 &lt;p&gt;Made in Sydney, Australia :-)&lt;/p&gt;&#xD;
 </description>
-    <notes>1.0.2&#xD;
+    <notes>1.0.3&#xD;
 &#xD;
-- Added Mage_CatalogInventory mocks&#xD;
-- Added Mage_Usa fallback mock model. Errors occur when loading system/config section and files of Mage_Usa have been removed&#xD;
+- Added Mage_Shipping mocks. Please read documentation how to properly disable this module.&#xD;
 &#xD;
-1.0.1&#xD;
-&#xD;
-- Added Mage_Weee mocks&#xD;
-- Added Mage_GiftMessage mocks&#xD;
-Possibility to run mock module in a shell script&#xD;
-&#xD;
-1.0.0&#xD;
-&#xD;
-- Initial Release</notes>
+https://github.com/Zookal/magento-mock&#xD;
+</notes>
     <authors><author><name>Cyrill Schumacher</name><user>cyrills</user><email>cyrill@schumacher.fm</email></author></authors>
-    <date>2014-04-24</date>
-    <time>07:49:09</time>
-    <contents><target name="magecommunity"><dir name="Zookal"><dir name="Mock"><dir><dir name="Block"><dir name="Payment"><file name="Backend.php" hash="b9229921a72e19f692cb9d6924221564"/><file name="Frontend.php" hash="833bd12a2d8c3b8ed489e283189ed122"/></dir></dir><dir name="Helper"><file name="Data.php" hash="e27f9f31e653126f207b985b0b3eb324"/></dir><dir name="Model"><file name="Config.php" hash="afbeb63c5a19a6911ab508477586f5e3"/><dir name="Mocks"><file name="Abstract.php" hash="beebca37228efabb0a38c29de4dd52ad"/><dir name="Mage"><dir name="AdminNotification"><dir name="Model"><file name="Survey.php" hash="6321f6d417c4c2f414f7b29de62f4cc4"/></dir></dir><dir name="Adminhtml"><dir name="Helper"><file name="Data.php" hash="7ccc6666f4ef1421a88319510d782f43"/></dir></dir><file name="Block.php" hash="7a2adb47711b912fa320b60e0c3eb3d4"/><dir name="CatalogInventory"><dir name="Model"><dir name="Stock"><file name="Item.php" hash="356a4ec59f91478130a18c75a8794cee"/></dir></dir></dir><dir name="Category"><file name="Collection.php" hash="6c9ac375135ca5269a5f888f022f6399"/><file name="Tree.php" hash="a37ecbc65cd3780ed191ee913509ef06"/></dir><file name="Category.php" hash="3c09f3eea7c89678670d4adeb0c4f708"/><dir name="Class"><dir name="Source"><file name="Customer.php" hash="5567855c827e3c8e925a0716de21dd70"/></dir></dir><dir name="Customer"><file name="Collection.php" hash="0322cd4a4b062a8fecf6a72cd6d7cbbc"/></dir><file name="Customer.php" hash="18e4ea855de44b6b6b7faabd684fc080"/><file name="Data.php" hash="0ab93919414ae9ecf8ed72f2bf038878"/><dir name="Giftmessage"><dir name="Block"><dir name="Adminhtml"><dir name="Product"><dir name="Helper"><dir name="Form"><file name="Config.php" hash="bbb81782c68fe9fe25cb5e6cb90a8642"/></dir></dir></dir></dir></dir></dir><file name="Group.php" hash="fcf85c8c3b24affbd8f2f82456ac3907"/><file name="Item.php" hash="f692effa3010262bfea29b18359d3549"/><dir name="Log"><dir name="Model"><file name="Visitor.php" hash="b8a8343c57f79abd38780594581e9dde"/></dir></dir><file name="Log.php" hash="8371873b2365c863c07c0c0227326b34"/><file name="Message.php" hash="4c812d8f56122fb5290162d6304bd524"/><dir name="Order"><file name="Collection.php" hash="3e8262c4cdda6f710c9e3a40e2b76a94"/><dir name="Grid"><file name="Collection.php" hash="97371286529c7b2ced399a5a51fe9b72"/></dir></dir><file name="Payment.php" hash="9a873df5da7d716854ea52258209928e"/><dir name="Product"><file name="Collection.php" hash="8ab40ba5191188eed78bcab7dd76f558"/></dir><file name="Product.php" hash="f038a1450c4a18059df3239262084e0f"/><dir name="Profile"><file name="Collection.php" hash="931080d96e85927a77f77143b49dadf6"/></dir><dir name="Queue"><file name="Collection.php" hash="c4d7dd95a1a1918a99993484f82d9b3d"/></dir><file name="Quote.php" hash="de3724f95154de0707f47d40ff9a08a8"/><file name="Review.php" hash="efd1a3f7dcf45e33f95fe2e76bdfbb5b"/><dir name="Sale"><file name="Collection.php" hash="aa228d612ae734749e9adc382e806cd4"/></dir><file name="Session.php" hash="e6f976be6bd82b367854842f385d1a4a"/><file name="Subscriber.php" hash="908e105fa12c88e0f0a312b42bef35d3"/><dir name="Tag"><dir name="Model"><file name="Tag.php" hash="38a200df605197975e5e294081cf0663"/></dir></dir><file name="Tag.php" hash="bb059453e0978b12350581978b1931af"/><dir name="Tax"><file name="Class.php" hash="cb7a52951105cb7aa0bb9f2c566570a7"/></dir><dir name="Usa"><dir name="Model"><dir name="Shipping"><dir name="Carrier"><file name="Ups.php" hash="7debdce0931fc61d8eeef92876a6a73c"/></dir></dir></dir></dir><dir name="Visitor"><file name="Online.php" hash="774df1f34ae162fa52db376afc415823"/></dir><file name="Visitor.php" hash="4c4eb14327dc35144203e28a646ad579"/><dir name="Weee"><dir name="Model"><file name="Tax.php" hash="8c57836668f3c9a3ce4632621ce4533a"/></dir></dir></dir></dir><file name="Observer.php" hash="9c454e91735a6aeadd4a4aa84b0094b4"/></dir><dir name="Test"><dir name="Config"><file name="ConfigTest.php" hash="9801ef844555a09a2189cb4e1916cf95"/><file name="SystemTest.php" hash="b72edbb351b923ccbc2543dc79d859ee"/></dir><dir name="Helper"><file name="DataTest.php" hash="57a4b15ca7d916d295fb95d1f621d6bd"/></dir><dir name="Model"><file name="ConfigTest.php" hash="6db11147c31fdf5ee8456610439e12cd"/><dir name="Mocks"><file name="AbstractTest.php" hash="84cb9162b6f5ee2b755c134ec7b5d765"/><dir name="Mage"><file name="AbstractPHPUnitTestCase.php" hash="a55c209378c6ff4e0785b38e2d61063c"/><dir name="AdminNotification"><dir name="Model"><file name="SurveyTest.php" hash="b96def6058ac4fe111b441791a7776cd"/></dir></dir><dir name="Adminhtml"><dir name="Helper"><file name="DataTest.php" hash="5b3979a82ed70277a1f9bd380628804c"/></dir></dir><file name="BlockTest.php" hash="7df2890ad281722b028b277ffe9f5aec"/><dir name="Category"><file name="CollectionTest.php" hash="30e4d976b5fdb4b4bd3ac27508ddc77f"/><file name="TreeTest.php" hash="5eea6b1f1eb7627b8be2467e9fc44715"/></dir><file name="CategoryTest.php" hash="8bb8f394ac0a6dec4c2c2927e897aa40"/><dir name="Class"><dir name="Source"><file name="CustomerTest.php" hash="9a4efa200d3a3a77517dd94c75b125ed"/></dir></dir><dir name="Customer"><file name="CollectionTest.php" hash="bedff17927077c41ebc2fdea25a9459f"/></dir><file name="CustomerTest.php" hash="6955de25f84e8ea0858b76a9ac84f4bc"/><file name="DataTest.php" hash="2084e46e1c693387e96f5ce5e563f67f"/><file name="GroupTest.php" hash="16dc75c4a737f286f03caab1deb3f539"/><file name="ItemTest.php" hash="6c6241a7c37dac90b6668558822bcfcd"/><dir name="Log"><dir name="Model"><file name="VisitorTest.php" hash="30a29b7af8019f104ce4f6f3184d5326"/></dir></dir><file name="LogTest.php" hash="1392e2f20815b47213e65b6992f85200"/><dir name="Order"><file name="CollectionTest.php" hash="be6ed09849c0ef7fc8d540b8c52de95b"/><dir name="Grid"><file name="CollectionTest.php" hash="f85cae1021ec016a74d6fe466a09db90"/></dir></dir><file name="PaymentTest.php" hash="0b699aaf2e0d93b5221d34269419c9dc"/><dir name="Product"><file name="CollectionTest.php" hash="290019047b0fa844037610b356adaea0"/></dir><file name="ProductTest.php" hash="fd63d2113ab9812d7df8c637961a4460"/><dir name="Profile"><file name="CollectionTest.php" hash="233e2ad2aa2e0dd3da750a827000433f"/></dir><dir name="Queue"><file name="CollectionTest.php" hash="b35aa9892b13e843a35129e004dc3bdb"/></dir><file name="QuoteTest.php" hash="751422cc0c634a2f0ed83029e2d4af03"/><file name="ReviewTest.php" hash="cad6eb2f598adcaba9531af5f2149701"/><dir name="Sale"><file name="CollectionTest.php" hash="0290b5ae630b013cb17f20bed56d856c"/></dir><file name="SessionTest.php" hash="68473113f4b839e57077dc8ec72454ea"/><file name="SubscriberTest.php" hash="c95eff8172514488f80be33e7a78819b"/><dir name="Tag"><dir name="Model"><file name="TagTest.php" hash="02ecb2c555704320e6172abf3aa8875a"/></dir></dir><file name="TagTest.php" hash="fcf844c4e6fa7cd943c5ed9ffcb24a09"/><dir name="Tax"><file name="ClassTest.php" hash="924eed52fe3d58d13acff30c2bfe62c4"/></dir><dir name="Visitor"><file name="OnlineTest.php" hash="467f0b0aa51e1fdd3e840438582a1c44"/></dir><file name="VisitorTest.php" hash="2168aa02549634a9fe1a1f6284fe7c6d"/></dir></dir><file name="ObserverTest.php" hash="3e2ad2bd8eda3e3a6a473ed70cc28b5d"/></dir></dir><dir name="etc"><file name="config.xml" hash="732e4aaf47d277eb7e91512aea0afd9a"/><file name="system.xml" hash="6f7e4c053196f05bc21e047d7a8c00ca"/></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Zookal_Mock.xml" hash="4cd2a39bb78e3b877df0e1a6758a2b56"/></dir></target><target name="magelocale"><dir><dir name="en_US"><file name="Zookal_Mock.csv" hash="68b173d35123933bedae6743039dc81d"/></dir></dir></target></contents>
+    <date>2014-04-26</date>
+    <time>02:27:10</time>
+    <contents><target name="magecommunity"><dir name="Zookal"><dir name="Mock"><dir><dir name="Block"><dir name="Payment"><file name="Backend.php" hash="b9229921a72e19f692cb9d6924221564"/><file name="Frontend.php" hash="833bd12a2d8c3b8ed489e283189ed122"/></dir></dir><dir name="Helper"><file name="Data.php" hash="a2191e423cc4d2714ad7e4456ab62e1a"/></dir><dir name="Model"><dir name="Catalog"><dir name="Model"><file name="Product.php" hash="79987b4bb930753e791a0724d3a191ca"/></dir></dir><file name="Config.php" hash="afbeb63c5a19a6911ab508477586f5e3"/><dir name="Mocks"><file name="Abstract.php" hash="7062a0f8e5894d8e94caedc1ad41fc1f"/><dir name="Mage"><dir name="AdminNotification"><dir name="Model"><file name="Survey.php" hash="6321f6d417c4c2f414f7b29de62f4cc4"/></dir></dir><dir name="Adminhtml"><dir name="Helper"><file name="Data.php" hash="7ccc6666f4ef1421a88319510d782f43"/></dir></dir><file name="Block.php" hash="7a2adb47711b912fa320b60e0c3eb3d4"/><dir name="CatalogInventory"><dir name="Model"><dir name="Stock"><file name="Item.php" hash="356a4ec59f91478130a18c75a8794cee"/></dir></dir></dir><dir name="Category"><file name="Collection.php" hash="6c9ac375135ca5269a5f888f022f6399"/><file name="Tree.php" hash="a37ecbc65cd3780ed191ee913509ef06"/></dir><file name="Category.php" hash="3c09f3eea7c89678670d4adeb0c4f708"/><dir name="Class"><dir name="Source"><file name="Customer.php" hash="5567855c827e3c8e925a0716de21dd70"/></dir></dir><file name="Config.php" hash="161f0f71a007fd5c71385bc5862e3108"/><dir name="Customer"><file name="Collection.php" hash="0322cd4a4b062a8fecf6a72cd6d7cbbc"/></dir><file name="Customer.php" hash="18e4ea855de44b6b6b7faabd684fc080"/><file name="Data.php" hash="0ab93919414ae9ecf8ed72f2bf038878"/><dir name="Giftmessage"><dir name="Block"><dir name="Adminhtml"><dir name="Product"><dir name="Helper"><dir name="Form"><file name="Config.php" hash="692dc99836671966ad2ab6a3f1a38871"/></dir></dir></dir></dir></dir></dir><file name="Group.php" hash="fcf85c8c3b24affbd8f2f82456ac3907"/><file name="Item.php" hash="f692effa3010262bfea29b18359d3549"/><dir name="Log"><dir name="Model"><file name="Visitor.php" hash="b8a8343c57f79abd38780594581e9dde"/></dir></dir><file name="Log.php" hash="8371873b2365c863c07c0c0227326b34"/><file name="Message.php" hash="4c812d8f56122fb5290162d6304bd524"/><dir name="Order"><file name="Collection.php" hash="3e8262c4cdda6f710c9e3a40e2b76a94"/><dir name="Grid"><file name="Collection.php" hash="97371286529c7b2ced399a5a51fe9b72"/></dir></dir><file name="Payment.php" hash="9a873df5da7d716854ea52258209928e"/><dir name="Product"><file name="Collection.php" hash="8ab40ba5191188eed78bcab7dd76f558"/></dir><file name="Product.php" hash="f038a1450c4a18059df3239262084e0f"/><dir name="Profile"><file name="Collection.php" hash="931080d96e85927a77f77143b49dadf6"/></dir><dir name="Queue"><file name="Collection.php" hash="c4d7dd95a1a1918a99993484f82d9b3d"/></dir><file name="Quote.php" hash="de3724f95154de0707f47d40ff9a08a8"/><dir name="Rate"><file name="Request.php" hash="62fd4dc319dbbe6938e4f1eb0b7ff3f0"/></dir><file name="Review.php" hash="efd1a3f7dcf45e33f95fe2e76bdfbb5b"/><dir name="Sale"><file name="Collection.php" hash="aa228d612ae734749e9adc382e806cd4"/></dir><file name="Session.php" hash="e6f976be6bd82b367854842f385d1a4a"/><dir name="Shipping"><dir name="Carrier"><file name="Ups.php" hash="af82649c2872ee29583dd08e41d7bffd"/><dir name="Usps"><dir name="Source"><file name="Size.php" hash="3e73101013feb7732324f4b2cac32097"/></dir></dir></dir><dir name="Model"><file name="Config.php" hash="3529b080243f5fb19b1f47278c6aad3a"/><dir name="Rate"><file name="Abstract.php" hash="e923d03075ca9416234eea19b3ccbc0c"/></dir><file name="Shipping.php" hash="20ffbe3eca7e6a1903217edc2834025d"/></dir></dir><file name="Shipping.php" hash="66c75c05f119eabfad44f61a06ee60e1"/><file name="Subscriber.php" hash="908e105fa12c88e0f0a312b42bef35d3"/><dir name="Tag"><dir name="Model"><file name="Tag.php" hash="38a200df605197975e5e294081cf0663"/></dir></dir><file name="Tag.php" hash="bb059453e0978b12350581978b1931af"/><dir name="Tax"><file name="Class.php" hash="cb7a52951105cb7aa0bb9f2c566570a7"/></dir><dir name="Visitor"><file name="Online.php" hash="774df1f34ae162fa52db376afc415823"/></dir><file name="Visitor.php" hash="4c4eb14327dc35144203e28a646ad579"/><dir name="Weee"><dir name="Model"><file name="Tax.php" hash="8c57836668f3c9a3ce4632621ce4533a"/></dir></dir></dir></dir><file name="Observer.php" hash="e2b4ce5a1a438ba82cb3c743d4686644"/></dir><dir name="Test"><dir name="Config"><file name="ConfigTest.php" hash="9801ef844555a09a2189cb4e1916cf95"/><file name="SystemTest.php" hash="b72edbb351b923ccbc2543dc79d859ee"/></dir><dir name="Helper"><file name="DataTest.php" hash="57a4b15ca7d916d295fb95d1f621d6bd"/></dir><dir name="Model"><file name="ConfigTest.php" hash="6db11147c31fdf5ee8456610439e12cd"/><dir name="Mocks"><file name="AbstractTest.php" hash="84cb9162b6f5ee2b755c134ec7b5d765"/><dir name="Mage"><file name="AbstractPHPUnitTestCase.php" hash="a55c209378c6ff4e0785b38e2d61063c"/><dir name="AdminNotification"><dir name="Model"><file name="SurveyTest.php" hash="b96def6058ac4fe111b441791a7776cd"/></dir></dir><dir name="Adminhtml"><dir name="Helper"><file name="DataTest.php" hash="5b3979a82ed70277a1f9bd380628804c"/></dir></dir><file name="BlockTest.php" hash="7df2890ad281722b028b277ffe9f5aec"/><dir name="Category"><file name="CollectionTest.php" hash="30e4d976b5fdb4b4bd3ac27508ddc77f"/><file name="TreeTest.php" hash="5eea6b1f1eb7627b8be2467e9fc44715"/></dir><file name="CategoryTest.php" hash="8bb8f394ac0a6dec4c2c2927e897aa40"/><dir name="Class"><dir name="Source"><file name="CustomerTest.php" hash="9a4efa200d3a3a77517dd94c75b125ed"/></dir></dir><dir name="Customer"><file name="CollectionTest.php" hash="bedff17927077c41ebc2fdea25a9459f"/></dir><file name="CustomerTest.php" hash="6955de25f84e8ea0858b76a9ac84f4bc"/><file name="DataTest.php" hash="2084e46e1c693387e96f5ce5e563f67f"/><file name="GroupTest.php" hash="16dc75c4a737f286f03caab1deb3f539"/><file name="ItemTest.php" hash="6c6241a7c37dac90b6668558822bcfcd"/><dir name="Log"><dir name="Model"><file name="VisitorTest.php" hash="30a29b7af8019f104ce4f6f3184d5326"/></dir></dir><file name="LogTest.php" hash="1392e2f20815b47213e65b6992f85200"/><dir name="Order"><file name="CollectionTest.php" hash="be6ed09849c0ef7fc8d540b8c52de95b"/><dir name="Grid"><file name="CollectionTest.php" hash="f85cae1021ec016a74d6fe466a09db90"/></dir></dir><file name="PaymentTest.php" hash="0b699aaf2e0d93b5221d34269419c9dc"/><dir name="Product"><file name="CollectionTest.php" hash="290019047b0fa844037610b356adaea0"/></dir><file name="ProductTest.php" hash="fd63d2113ab9812d7df8c637961a4460"/><dir name="Profile"><file name="CollectionTest.php" hash="233e2ad2aa2e0dd3da750a827000433f"/></dir><dir name="Queue"><file name="CollectionTest.php" hash="b35aa9892b13e843a35129e004dc3bdb"/></dir><file name="QuoteTest.php" hash="751422cc0c634a2f0ed83029e2d4af03"/><file name="ReviewTest.php" hash="cad6eb2f598adcaba9531af5f2149701"/><dir name="Sale"><file name="CollectionTest.php" hash="0290b5ae630b013cb17f20bed56d856c"/></dir><file name="SessionTest.php" hash="68473113f4b839e57077dc8ec72454ea"/><file name="SubscriberTest.php" hash="c95eff8172514488f80be33e7a78819b"/><dir name="Tag"><dir name="Model"><file name="TagTest.php" hash="02ecb2c555704320e6172abf3aa8875a"/></dir></dir><file name="TagTest.php" hash="fcf844c4e6fa7cd943c5ed9ffcb24a09"/><dir name="Tax"><file name="ClassTest.php" hash="924eed52fe3d58d13acff30c2bfe62c4"/></dir><dir name="Visitor"><file name="OnlineTest.php" hash="467f0b0aa51e1fdd3e840438582a1c44"/></dir><file name="VisitorTest.php" hash="2168aa02549634a9fe1a1f6284fe7c6d"/></dir></dir><file name="ObserverTest.php" hash="3e2ad2bd8eda3e3a6a473ed70cc28b5d"/></dir></dir><dir name="etc"><file name="config.xml" hash="ee1d00461716607d4cfe31e7cdc8b2dd"/><file name="system.xml" hash="3174d8fb6f776dab5343ac6b23a7d347"/></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Zookal_Mock.xml" hash="4cd2a39bb78e3b877df0e1a6758a2b56"/></dir></target><target name="magelocale"><dir><dir name="en_US"><file name="Zookal_Mock.csv" hash="68b173d35123933bedae6743039dc81d"/></dir></dir></target></contents>
     <compatible/>
     <dependencies><required><php><min>5.3.0</min><max>6.0.0</max></php></required></dependencies>
 </package>

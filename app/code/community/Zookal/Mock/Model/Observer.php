@@ -25,8 +25,10 @@ class Zookal_Mock_Model_Observer
     protected $_mappingModel = array(
         'Mage_Wishlist'       => 'wishlist',
         'Mage_Weee'           => 'weee',
+        'Mage_Usa'            => 'usa',
         'Mage_Tag'            => 'tag',
         'Mage_Tax'            => 'tax',
+        'Mage_Shipping'       => 'shipping',
         'Mage_Sales'          => 'sales',
         'Mage_Review'         => 'review',
         'Mage_Reports'        => 'reports',
@@ -53,15 +55,17 @@ class Zookal_Mock_Model_Observer
         'Mage_Adminhtml'      => '_mageMockIncludePath',
         'Mage_Catalog'        => '_mageCatalog',
         'Mage_Customer'       => '_mageCustomer',
-        'Mage_GiftMessage'    => '_mageMockHelper',
+        'Mage_GiftMessage'    => '_mageMockHelperIncludePath',
         'Mage_GoogleCheckout' => '_mageGoogleCheckout',
         'Mage_Log'            => '_mageMockIncludePath',
         'Mage_ProductAlert'   => '_mageMockHelper',
         'Mage_Review'         => '_mageMockHelper',
+        'Mage_Shipping'       => '_mageMockHelperIncludePath',
         'Mage_Tag'            => '_mageMockIncludePath',
         'Mage_Tax'            => '_mageTaxClass',
+        'Mage_Usa'            => '_mageMockHelper',
         'Mage_Wishlist'       => '_mageMockHelper',
-        'Mage_Weee'           => '_mageMockWeee',
+        'Mage_Weee'           => '_mageMockHelperIncludePath',
     );
 
     /**
@@ -147,7 +151,7 @@ class Zookal_Mock_Model_Observer
      * @param $moduleName
      * @param $resource
      */
-    protected function _mageMockWeee($pathPrefix, $moduleName, $resource)
+    protected function _mageMockHelperIncludePath($pathPrefix, $moduleName, $resource)
     {
         $this->_mageMockHelper($pathPrefix, $moduleName, $resource);
         $this->_mageMockIncludePath();
