@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Zookal_Mock",
+    "type": "magento-module",
+    "license": "OSL",
+    "homepage": "",
+    "description": "Transparent auto detecting of disabled core modules & exten. Providing mock objects for not breaking Magento.",
+    "authors": [
+    {
+        "name": "Cyrill Schumacher",
+        "email": "cyrill@schumacher.fm"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
