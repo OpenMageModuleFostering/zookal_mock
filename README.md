@@ -1,3 +1,9 @@
+#Abandoned Info
+
+This Module has a different Home, please look for zookal/magento-mock
+at: https://github.com/Zookal/magento-mock
+
+
 ## Original Package Description
 
 Transparent auto detecting of disabled core modules & exten. Providing mock objects for not breaking Magento.
