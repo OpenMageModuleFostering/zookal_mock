@@ -1,7 +1,7 @@
 {
     "name": "openmage-module-fostering\/zookal_mock",
     "type": "magento-module",
-    "license": "OSL",
+    "license": "OSL-3.0",
     "homepage": "",
     "description": "Transparent auto detecting of disabled core modules & exten. Providing mock objects for not breaking Magento.",
     "authors": [
@@ -15,5 +15,6 @@
     },
     "keywords": [
         "openmage-module"
-    ]
+    ],
+    "abandoned": "zookal\/magento-mock"
 }
